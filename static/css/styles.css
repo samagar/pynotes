@@ -1,0 +1,59 @@
+
+
+.login-wrapper {
+  text-align: left;
+}
+
+.body-left {
+  display: inline-block;
+  width:20%;
+  float:left;
+  color:black;
+  background:ghostwhite;
+}
+
+.body-right {
+  display: inline-block;
+  width:78%;
+  height: auto;
+  float:right;
+}
+
+.head-pane {
+  display: inline-block;
+}
+
+.body-right Input[type=text] {
+  padding: 1px;
+  border: none;
+  width: 100%;
+  font-size: 15px;
+}
+
+.note-area {
+  min-height: 200px;
+  height: auto;
+}
+
+.note-entry {
+display: block;
+block-size:30px;
+text-decoration: none;
+font: 13px verdana;
+color: black;
+border-bottom: 1px solid lightgray;
+background:ghostwhite;
+}
+.note-entry:hover {
+  background-color: black;
+  color: white;
+}
+
+.body-left input[type=text] {
+  padding: 6px;
+  border: none;
+  margin-top: 8px;
+  margin-right: 10px;
+  margin-left: 10px;
+  font-size: 17px;
+}

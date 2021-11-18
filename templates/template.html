@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet"
+		href="{{ url_for('static', filename='css/styles.css') }}">  
+		<script type="text/javascript" src="{{ url_for('static', filename='tinymce/js/tinymce/tinymce.min.js') }}"></script>
+		
+		<script type=text/javascript>
+			tinymce.init({
+				selector:"#detail",
+				plugins: ['toc autoresize'],
+				menubar: false,
+        		statusbar: false
+			});
+		</script>
+	</head>
+	<body>
+		<div class="container">		
+			<! inheritance -->
+			{% block content %}
+			{% endblock %}
+			<! end inheritance -->			
+		</div>
+	</body>
+</html>

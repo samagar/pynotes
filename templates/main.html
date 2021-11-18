@@ -1,0 +1,55 @@
+{% extends "template.html" %}
+{% block content %}
+   <div class="body-right">
+         <div>
+            <h2>Welcome to Note App</h2>
+            <div class="head-pane">            
+               <p><a href="{{ url_for('log_out') }}">log out</a></p>
+               <br/>
+            </div>
+            <div class="head-pane">
+               <p><a href="{{ url_for('main', callfrom='new') }}">Create New</a></p>
+               <br/>
+            </div>
+            
+            {% if note_id != None %}
+            <a href="{{ url_for('delete_entry', note_id=note_id) }}">Delete</a>
+            {% endif %}
+            
+            {% for message in get_flashed_messages() %}
+            <div class="flash">{{ message }}</div>
+            {% endfor %}
+         </div>
+         <form action="{{ url_for('notes', note_id = note_id) }}" method="post">
+               <div class="button">
+               {% if note_id != None %}
+               <input class="button" name='savedata' type="submit" value="Update"></div>
+               {% else %}
+               <input class="button" name='savedata' type="submit" value="Save"></div>
+               {% endif %}
+              
+			      {% if error %}
+				   <p class="error"><strong>Error:</strong> {{ error }} </p>
+			      {% endif %}
+            <div>
+               <input class="note-title" placeholder="Enter Title" name="title" type="text" value="{{ title }}">
+            </div>
+            <br/>
+            <div>
+               <textarea id="detail" class= "note-area" name="detail" type="text" placeholder="Detail Notes">{{ detail }}  </textarea>
+            </div>
+         </form>
+   </div>
+   <div class="body-left">
+      <input type="text" placeholder="Search..">
+      <br/>
+      {% for p in notes %}
+         <a href="{{ url_for('display_entry', note_id=p.note_id) }}" class="note-entry">
+         <div> 
+            {{p.title}}
+         </div>   
+         </a>
+      {% endfor %}
+   </div>
+
+{% endblock %}
