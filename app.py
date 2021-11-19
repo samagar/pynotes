@@ -67,32 +67,31 @@ def login():
             return redirect(url_for('main'))
     return render_template('login.html', error = error), status_code
 
+
 @app.route('/add',methods=['POST'])
 @login_required
 def notes():
+
     title = request.form['title']
     detail = request.form['detail']
-    
     requesttype = request.form['savedata']
     user = session["username"]
     note_id = request.args.get('note_id')
 
-    if not title or not detail:
-        flash('You need to enter all fields')
-        return redirect(url_for('main', callfrom='new'))
-
     if requesttype == 'Update':
-        flash(title)
-        flash(detail)
-        flash(note_id)
-
         g.db = connect_db()
         curr = g.db.execute("UPDATE Notes  \
             set title = ?, detail =?, posted_date = '10/16/2021' where note_id =?",(title, detail, note_id))
         g.db.commit()
         g.db.close()
         flash('Entry Updated')
-    else:
+        return redirect(url_for('main', title=title, detail=detail, callfrom='display', note_id=note_id))
+    
+    if requesttype == "Save":
+        if not title or not detail:
+            flash('You need to enter all fields')
+            return redirect(url_for('main', callfrom='new'))
+
         g.db = connect_db()
         curr = g.db.execute('INSERT INTO Notes(title, detail, posted_date, Userid, status) \
         values (?,?,?,?,?)', 
@@ -101,14 +100,19 @@ def notes():
         g.db.close()
         flash('new entry added')
 
+    if requesttype == "Delete":
+        g.db = connect_db()
+        g.db.execute('delete from notes where note_id='+str(note_id))
+        g.db.commit()
+        g.db.close()
+        flash('The note was deleted.')
+    
     return redirect(url_for('main'))
-
 
 @app.route('/logout')
 @login_required
 def log_out():
     session.pop('logged_in', None)
-    # flash('Successfully logged out')
     return redirect(url_for('login'))
 
 
@@ -136,3 +140,6 @@ def display_entry(note_id):
     
 if __name__ == '__main__':
     app.run(host='localhost', port='8000', debug=True)
+
+    #                     <a href="{{ url_for('delete_entry', note_id=note_id) }}"><button class="oth-btn">Delete</button></a>
+    
