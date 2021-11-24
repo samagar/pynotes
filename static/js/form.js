@@ -4,7 +4,7 @@ $(document).ready(function(){
 
     var note_id = $('#note_id').text();
     var title = $('#title').val();
-    var detail = $('#detail').val();
+    var detail = tinymce.get("detail").getContent();
     var requesttype = "Update";
 
 

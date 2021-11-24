@@ -1,10 +1,10 @@
+
 # Import db and flask components
 from flask import Flask, render_template, flash, session, \
 redirect, url_for, request, g, jsonify
 
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.exc import IntegrityError
-import datetime
+# Import Sqlite3
+import sqlite3
 
 # Import wraps to enable execute mandatory models before 
 # any fucntion to avoid unauth acess
@@ -13,7 +13,7 @@ from functools import wraps
 # Crete App object and import config
 app = Flask(__name__)
 app.config.from_object('_config')
-db = SQLAlchemy(app)
+# db = SQLAlchemy(app)
 
 # Connect db
 def connect_db():
