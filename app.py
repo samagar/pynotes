@@ -1,7 +1,10 @@
 # Import db and flask components
-import sqlite3
 from flask import Flask, render_template, flash, session, \
-redirect, url_for, request, g
+redirect, url_for, request, g, jsonify
+
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import IntegrityError
+import datetime
 
 # Import wraps to enable execute mandatory models before 
 # any fucntion to avoid unauth acess
@@ -10,6 +13,7 @@ from functools import wraps
 # Crete App object and import config
 app = Flask(__name__)
 app.config.from_object('_config')
+db = SQLAlchemy(app)
 
 # Connect db
 def connect_db():
@@ -26,6 +30,23 @@ def login_required(test):
             return redirect(url_for('login'))
     return wrap
 
+@app.route('/',methods=['GET','POST'])
+def login():
+    error  = None
+    status_code = 201
+
+    if request.method == 'POST':
+        if request.form['username'] != app.config['USERNAME'] or \
+            request.form['password'] != app.config['PASSWORD']:
+            flash('incorrect credentials..try again')
+            status_code = 401
+        else:
+            session['logged_in'] = True
+            session['username'] = request.form['username']
+            return redirect(url_for('main'))
+    return render_template('login.html', error = error), status_code
+
+# Main Page
 @app.route("/main",methods=['GET','POST'])
 @login_required
 def main():
@@ -51,41 +72,23 @@ def main():
 
     return render_template('main.html',note_id=note_id, notes=notes, title=title, detail=detail)
 
-@app.route('/',methods=['GET','POST'])
-def login():
-    error  = None
-    status_code = 201
-
-    if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME'] or \
-            request.form['password'] != app.config['PASSWORD']:
-            flash('incorrect credentials..try again')
-            status_code = 401
-        else:
-            session['logged_in'] = True
-            session['username'] = request.form['username']
-            return redirect(url_for('main'))
-    return render_template('login.html', error = error), status_code
-
-
 @app.route('/add',methods=['POST'])
 @login_required
 def notes():
-
     title = request.form['title']
-    detail = request.form['detail']
     requesttype = request.form['savedata']
+    detail = request.form['detail']
     user = session["username"]
-    note_id = request.args.get('note_id')
 
     if requesttype == 'Update':
+        note_id = request.form['note_id']   
         g.db = connect_db()
         curr = g.db.execute("UPDATE Notes  \
             set title = ?, detail =?, posted_date = '10/16/2021' where note_id =?",(title, detail, note_id))
         g.db.commit()
         g.db.close()
-        flash('Entry Updated')
-        return redirect(url_for('main', title=title, detail=detail, callfrom='display', note_id=note_id))
+        return jsonify({ 'var1': "Entry Updated"})
+        # return redirect(url_for('main', title=title, detail=detail, callfrom='display', note_id=note_id))
     
     if requesttype == "Save":
         if not title or not detail:
@@ -94,20 +97,20 @@ def notes():
 
         g.db = connect_db()
         curr = g.db.execute('INSERT INTO Notes(title, detail, posted_date, Userid, status) \
-        values (?,?,?,?,?)', 
-        [request.form['title'],request.form['detail'],"10/16/2021",user,1])
+        values (?,?,?,?,?)',[request.form['title'],request.form['detail'],"10/16/2021",user,1])
         g.db.commit()
         g.db.close()
-        flash('new entry added')
+        # flash('new entry added')
+        return jsonify({ 'var1': "Entry Added"})
+        #return redirect(url_for('main'))
 
     if requesttype == "Delete":
+        note_id = request.form['note_id']
         g.db = connect_db()
         g.db.execute('delete from notes where note_id='+str(note_id))
         g.db.commit()
         g.db.close()
-        flash('The note was deleted.')
-    
-    return redirect(url_for('main'))
+        return jsonify({ 'var1': "Entry Deleted"})
 
 @app.route('/logout')
 @login_required
@@ -125,7 +128,7 @@ def delete_entry(note_id):
     g.db.commit()
     g.db.close()
 
-    flash('The note was deleted.')
+  #  flash('The note was deleted.')
     return redirect(url_for('main'))
 
 # Display Notes
@@ -136,10 +139,8 @@ def display_entry(note_id):
     row = g.db.execute('select * from notes where note_id='+str(note_id)).fetchone()
     note_row = dict(note_id=row[0],title=row[1],detail=row[2]) 
     g.db.close()
+   #  flash(note_id)
     return redirect(url_for('main', code=307, title=note_row['title'], detail=note_row['detail'], callfrom='display', note_id=note_id))
     
 if __name__ == '__main__':
     app.run(host='localhost', port='8000', debug=True)
-
-    #                     <a href="{{ url_for('delete_entry', note_id=note_id) }}"><button class="oth-btn">Delete</button></a>
-    

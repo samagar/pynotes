@@ -1,52 +1,51 @@
 {% extends "template.html" %}
 {% block content %}
-   <div class="main-head">
-      <div class="search-bar">
-         <input type="text" placeholder="Search..">
+<div>
+      <div id="head" class="p-2 d-flex bg-primary text-white">
+         <div class="p-2 flex-fill">
+            <input class="form-control p-2" type="text" value="">
+         </div>
+         <div class="p-2 flex-fill text-white">
+            <h4>My Pynotes App</h4>
+         </div>
+         <div class="p-2 flex-fill">
+            <a href="{{ url_for('main', callfrom='new') }}"><button class="btn btn-warning float-end"><i class="fa fa-plus"></i> Create New </button></a>
+            <a href="{{ url_for('log_out') }}"><button class="btn btn-warning "><i class="fa fa-sign-out"></i> Log Out </button></a>
+         </div>    
+         </div>
       </div>
-      <div class="title-div">
-         <h2>Pynotes App...Do notes !!</h2>
-      </div>
-      <div class="user-quickfunc">
-         <a href="{{ url_for('main', callfrom='new') }}"><button class="head-btn"><i class="fa fa-plus"></i> Create New </button></a>
-         <a href="{{ url_for('log_out') }}"><button class="head-btn"><i class="fa fa-sign-out"></i> Log Out </button></a>
-      </div>
-   </div>
-   <div class=body-main>
-      <div class="body-left">
-         {% for p in notes %}
+      <div id="body" class="p-2 d-flex">
+         <div class="flex-fill col-sm-3">
+            {% for p in notes %}
             <a href="{{ url_for('display_entry', note_id=p.note_id) }}" class="note-entry">
             <div> 
                {{p.title}}
             </div>   
             </a>
-         {% endfor %}
-      </div>
-      <div class="body-right">
-         <div class="form-main">
-            <form action="{{ url_for('notes', note_id=note_id) }}"  method="post">
-               <div class="form-title"> 
-                  <div id="fl">
-                     <input placeholder="Enter Title" name="title" type="text" value="{{ title }}"> 
-                  </div>
-                  <div id="fr">
-                     {% if note_id != None %}
-                     <input class="oth-btn" id="update" name='savedata' type="submit" value="Update">
-                     <input class="oth-btn" id="delete" name='savedata' type="submit" value="Delete">
-                     {% else %}
-                     <input class="oth-btn" name='savedata' type="submit" value="Save">   
-                     {% endif %}
-                  </div>
+            {% endfor %}
+         </div>
+         <div class="flex-fill col-sm-20">
+            <form action="{{ url_for('notes', note_id=note_id, where='b000') }}" method='post'>
+               <div>
+                  <input type="text" class="form-control mb-2" name="title" id="title" value="{{ title }}"></input>
+                 {% if note_id != None %}
+                 <button type="submit" class="btn btn-primary mb-1" id="update" name="savedata" value="Update">Update</button>
+                 <button type="submit" class="btn btn-primary mb-1" id="delete" name="savedata" value="Delete">Delete</button>       
+                 {% else %}
+                 <button type="submit" class="btn btn-primary mb-1" id="save" name="savedata" value="Save">Save</button>
                </div>
                <div>
-                     {% for message in get_flashed_messages() %}
-                     {{ message }}
-                     {% endfor %}
-                     <textarea id="detail" class= "note-area" name="detail" type="text" placeholder="Detail Notes">{{ detail }}  </textarea>
+                  {% endif %}
+                  {% for message in get_flashed_messages() %}
+                  {{ message }}
+                  {% endfor %}
+                  <div id="note_id">{{ note_id }}</div>
+                  <div id="flashmsg"></div>
+                  <textarea type="text" class="form-control" name="detail" id="detail">{{ detail }}</textarea>
                </div>
             </form>
          </div>
       </div>
-   </div >
+</div>
 
 {% endblock %}
