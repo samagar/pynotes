@@ -1,41 +1,42 @@
-# project/model.py
+# project/db_create.py
 
-from views import db
-import datetime
+from datetime import date
 
-class Notes(db.Model):
+import sqlite3
+from _config import DATABASE_PATH
 
-    __tablename__ = "notes"
+with sqlite3.connect(DATABASE_PATH) as connection:
 
-    note_id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String, nullable=False)
-    detail = db.Column(db.String, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id') )
-    posted_date = db.Column(db.Date, default=datetime.datetime.utcnow())     
+    # get a cursor object used to execute SQL commands
+    c = connection.cursor()
 
-    def __init__(self, title, detail, user_id, posted_date):
-        self.title = title
-        self.detail = detail
-        self.user_id = user_id
-        self.posted_date = posted_date
+    # create Notes table
+    c.execute("""CREATE TABLE Notes(note_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,detail TEXT NOT NULL, posted_date TEXT NOT NULL, 
+        UserId INTEGER,
+        status INTEGER,
+        FOREIGN KEY(UserId) REFERENCES Users(user_id))""")
 
-    def __repr__(self):
-        return '<title {0}>'.format(self.name)
-        
-class User(db.Model):
-    __tablename__ = 'users'
+    # insert dummy data into the notes table
+    c.execute(
+        'INSERT INTO Notes (title, detail, posted_date, status)'
+        'VALUES("Test","test","03/25/2020", 1)'
+    )
+    c.execute(
+        'INSERT INTO Notes (title, detail, posted_date, status)'
+        'VALUES("Test2","test2","03/25/2021", 1)'
+    )
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True, nullable=False)
-    email= db.Column(db.String, unique=True, nullable=False)
-    password = db.Column(db.String, nullable=True)
-    notes = db.relationship('Notes', backref='poster')
+    # create Users table
+    c.execute("""CREATE TABLE Users (user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,email TEXT NOT NULL, 
+        password TEXT NOT NULL,
+        note_id TEXT,
+        FOREIGN KEY(note_id) REFERENCES Notes(note_id)
+        )""")
 
-
-    def __init__(self, name=None, email=None, password=None):
-        self.name = name
-        self.email = email
-        self.password = password
-
-    def __repr__(self):
-        return '<User{0}>'.format(self.name)
+    # insert dummy data into the User table
+    c.execute(
+        'INSERT INTO Users (name, email, password)'
+        'VALUES("Test","Test@gmail.com", "Test")'
+    )

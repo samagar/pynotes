@@ -26,7 +26,10 @@ $(document).ready(function(){
             alert('Exception:', exception);
         }
     });
-});
+    });
+    $('#search').on('input', function() {
+        $("#flashmsg").text("updated text").show();
+    }); 
 });
 
 $(document).ready(function(){
@@ -55,7 +58,7 @@ $(document).ready(function(){
         error: function(exception) {
             alert('Exception:', exception);
         }
-    });
+    });      
 });
 
 $("#save").click(function(event){
@@ -64,6 +67,7 @@ $("#save").click(function(event){
     var title = $('#title').val();
     var detail = tinymce.get("detail").getContent();
     var requesttype = "Save";
+
 
     $.ajax({
         data: {

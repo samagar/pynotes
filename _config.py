@@ -7,9 +7,11 @@ DATABASE = 'flasknote.db'
 USERNAME = 'sandeep'
 PASSWORD = 'sandeep'
 WTF_CSRF_ENABLED = True
-SECRET_KEY = 'myprecious'
+SECRET_KEY = 'my_precious'
 
 # define the full path for the database
 DATABASE_PATH = os.path.join(basedir, DATABASE)
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE_PATH
+
+SQLALCHEMY_TRACK_MODIFICATIONS = False

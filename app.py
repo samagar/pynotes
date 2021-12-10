@@ -3,21 +3,17 @@
 from flask import Flask, render_template, flash, session, \
 redirect, url_for, request, g, jsonify
 
-# Import Sqlite3
-import sqlite3
 
-# Import wraps to enable execute mandatory models before 
-# any fucntion to avoid unauth acess
-from functools import wraps
+from functools import wraps 
 
 # Crete App object and import config
 app = Flask(__name__)
 app.config.from_object('_config')
-# db = SQLAlchemy(app)
 
-# Connect db
+# Connect db - without SQLAlchemy
+import sqlite3
 def connect_db():
-    return sqlite3.connect(app.config["DATABASE"])
+   return sqlite3.connect(app.config["DATABASE"])
 
 # Login function
 def login_required(test):

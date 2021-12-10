@@ -8,11 +8,11 @@ class AddNoteForm(Form):
     note_id = IntegerField()
     title = StringField('title', validators=[DataRequired()])
     detail = StringField('detail', validators=[DataRequired()])
-    posted_date = DateField(
-        'Posted Date',
-         validators=[DataRequired()], format='%Y-%m-%d'
-    )
+    posted_date = StringField('posted_date')
     status = IntegerField('Status') 
+#posted_date = DateField(
+#        'Posted Date',
+#         validators=[DataRequired()], format='%Y-%m-%d'
 
 class RegisterForm(Form):
     name = StringField(
