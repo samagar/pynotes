@@ -91,7 +91,7 @@ def main():
 @app.route("/update", methods=['GET', 'POST'])
 @login_required
 def update():
-	user = session['username']
+	# user = session['username']
 	user = 1
 	title = request.form['title']
 	detail = request.form['detail']
