@@ -9,37 +9,33 @@
             <h4>My Pynotes App</h4>
          </div>
          <div class="p-2 flex-fill">
-            <a href="{{ url_for('main', callfrom='new') }}"><button class="btn btn-warning float-end"><i class="fa fa-plus"></i> Create New </button></a>
+            <button id="new" class="btn btn-warning float-end"><i class="fa fa-plus"></i> Create New </button>
             <a href="{{ url_for('logout') }}"><button class="btn btn-warning "><i class="fa fa-sign-out"></i> Log Out </button></a>
          </div>    
          </div>
       </div>
       <div id="body" class="p-2 d-flex">
-         <div class="flex-fill col-sm-3">
+         <div class="flex-fill col-lg-3">
             {% for p in notes %}
-            <a href="{{ url_for('display_entry', note_id=p.note_id) }}" class="note-entry">
-            <div> 
-               {{p.title}}
-            </div>   
-            </a>
+            <div class="sidebar" value="{{p.note_id}}">{{p.title}}</div>   
             {% endfor %}
          </div>
-         <div class="flex-fill col-sm-20">
-            <form action="{{ url_for('notes', note_id=note_id, where='b000') }}" method='post'>
+         <div class="flex-fill col-lg-10">
+            <form action="" method='post'>
                <div>
                   <div>
                      <input class="form-control mb-2" name="title" id="title" value="{{ title }}"></input>
                   </div>
                  {% if note_id != None %}
-                 <button type="submit" class="btn btn-primary mb-1" id="update" name="savedata" value="Update">Update</button>
-                 <button type="submit" class="btn btn-primary mb-1" id="delete" name="savedata" value="Delete">Delete</button>       
+                 <button type="submit" class="btn btn-secondary btn-sm savebtn" id="add" name="savedata" value="Save">Save</button>
+                 <button type="submit" class="btn btn-secondary btn-sm" id="update" name="savedata" value="Update">Update</button>
+                 <button type="submit" class="btn btn-secondary btn-sm" id="delete" name="savedata" value="Delete">Delete</button>     
                  {% else %}
-                 <button type="submit" class="btn btn-primary mb-1" id="save" name="savedata" value="Save">Save</button>
+                 <button type="submit" class="btn btn-secondary btn-sm" id="add" name="savedata" value="Save">Save</button>
                  {% endif %}
-                 <button type="submit" class="btn btn-primary mb-1" id="activity" name="activity" value="activity">Show Activity</button>
+                 <button type="submit" class="btn btn-secondary btn-sm" id="activity" name="activity" value="activity">Show Activity</button>
                </div> 
                <div>
-               
                   {% for message in get_flashed_messages() %}
                   {{ message }}
                   {% endfor %}

@@ -3,6 +3,9 @@
    <div class="login-wrapper">
       <h2>Welcome to Flask Note App</h2>
       <h3>Please login to access blog</h3>
+	  {% for message in get_flashed_messages() %}
+	  {{ message }}
+	  {% endfor %}
       <form action="" method="POST">
    		<div>
    			<lable for="name">username:</lable>

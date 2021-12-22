@@ -127,3 +127,19 @@ input:focus, textarea:focus, select:focus{
 .mce-container {
   border: 0px !important;
 }
+
+.savebtn {
+  display:none
+}
+
+.sidebar:hover {
+  background-color: lightgray;
+  opacity: 50%;
+  border-radius: 10px;
+  color: black !important;
+  font-size: 11px bold;
+}
+.sidebar {
+  border-bottom: 1px solid lightgray;
+  border-radius: 1px
+}
